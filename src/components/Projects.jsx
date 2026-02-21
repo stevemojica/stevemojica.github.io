@@ -55,11 +55,10 @@ function Projects() {
   return (
     <section className="section" id="projects">
       <div className="section-header">
-        <div className="section-label">Projects</div>
-        <h2 className="section-title">What I&apos;m Building</h2>
+        <div className="section-label">Open Source</div>
+        <h2 className="section-title">GitHub Portfolio</h2>
         <p className="section-subtitle">
-          Open-source tools and projects at the intersection of leadership, AI,
-          and engineering.
+          A showcase of my open-source tools, contributions, and personal projects.
         </p>
       </div>
 

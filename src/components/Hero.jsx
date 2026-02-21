@@ -6,26 +6,26 @@ function Hero() {
 
         <div className="hero-status">
           <span className="status-dot" />
-          Available for collaboration
+          Building in Public
         </div>
 
         <h1 className="hero-name">Steve Mojica</h1>
         <p className="hero-title">
-          <span>IT Director</span> &middot; Developer &middot; Technology Leader
+          <span>IT Professional</span> &middot; Network Administrator &middot; Coder
         </p>
 
         <p className="hero-bio">
-          Building bridges between leadership and code. Passionate about
-          empowering teams through technology, exploring AI-driven workflows
-          with Claude, and contributing to the OpenClaw community.
+          Dedicated to empowering K-12 education through technology. Documenting
+          my journey building open-source tools, leading IT infrastructure, and
+          exploring AI-driven workflows.
         </p>
 
         <div className="hero-links">
-          <a href="#projects" className="hero-link hero-link--primary">
-            &#128193; View Projects
+          <a href="#blog" className="hero-link hero-link--primary">
+            &#128221; Read the Blog
           </a>
-          <a href="#blog" className="hero-link hero-link--secondary">
-            &#128221; Read My Thoughts
+          <a href="#projects" className="hero-link hero-link--secondary">
+            &#128193; Open Source Work
           </a>
           <a
             href="https://github.com/stevemojica"

@@ -1,12 +1,12 @@
 ---
-slug: 'https://github.com/stevemojica/stevemojica.github.io/blob/master/src/posts/tailscale-termius-mobile-ssh.md)'
+slug: 'https://github.com/stevemojica/stevemojica.github.io/blob/master/src/posts/tailscale-termius-mobile-ssh.md'
 category: 'coding'
 label: 'React'
 date: 'Feb 2026'
-readTime: '4 min read'
-title: 'Mobile SSH Access to Cloud Terminal via Tailscale + Termius
+readTime: '6 min read'
+title: 'Gateway Crashes, Model Woes, and Going Full Local (Feb 19, 2026
 '
-excerpt: 'accessing claude code remotely'
+excerpt: 'gateway crashes'
 ---
 
 # 🦞 Gateway Crashes, Model Woes, and Going Full Local (Feb 19, 2026)

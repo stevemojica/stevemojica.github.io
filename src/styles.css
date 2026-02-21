@@ -696,8 +696,33 @@ body {
 }
 
 /* ============================================
-   Skills Section
+   Skills Section (Technical Toolkit)
    ============================================ */
+
+/* The Legend Bar above the skills */
+.domain-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+  padding: 1rem;
+  background: var(--bg-card);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
 
 .skills-grid {
   display: grid;
@@ -714,6 +739,8 @@ body {
   padding: 1.5rem;
   transition: all var(--transition);
   box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
 }
 
 .skill-category:hover {
@@ -745,10 +772,16 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+  margin-top: auto;
+  /* pushes items to top if cards vary in height */
 }
 
+/* Individual Skill tags now flex to hold the colored dots */
 .skill-tag {
-  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.825rem;
   padding: 5px 12px;
   background: var(--bg-tertiary);
   border: 1px solid var(--border);
@@ -758,8 +791,44 @@ body {
 }
 
 .skill-tag:hover {
-  border-color: var(--accent);
-  color: var(--accent);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateY(-1px);
+}
+
+/* Domain Overlap Dots */
+.domain-dots-container {
+  display: flex;
+  gap: 3px;
+}
+
+.domain-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  box-shadow: 0 0 4px currentColor;
+}
+
+/* The Domain Colors */
+.domain-infra {
+  color: var(--cyan);
+  background: var(--cyan);
+}
+
+.domain-ai {
+  color: var(--purple);
+  background: var(--purple);
+}
+
+.domain-dev {
+  color: var(--green);
+  background: var(--green);
+}
+
+.domain-mgmt {
+  color: var(--orange);
+  background: var(--orange);
 }
 
 /* ============================================

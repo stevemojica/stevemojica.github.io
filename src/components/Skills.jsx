@@ -1,33 +1,71 @@
+const DOMAINS = {
+  infra: { label: 'IT & Infrastructure', colorClass: 'domain-infra' },
+  ai: { label: 'AI & Machine Learning', colorClass: 'domain-ai' },
+  dev: { label: 'Software Engineering', colorClass: 'domain-dev' },
+  mgmt: { label: 'Leadership & Strategy', colorClass: 'domain-mgmt' }
+};
+
 const CATEGORIES = [
   {
-    icon: '&#128187;',
-    name: 'Languages & Frameworks',
-    skills: ['JavaScript', 'TypeScript', 'Python', 'React', 'Node.js', 'Bash', 'SQL', 'HTML/CSS'],
+    icon: '&#128421;', // Desktop computer
+    name: 'Infrastructure & Engineering',
+    skills: [
+      { name: '2Gbps Fiber Backbones', domains: ['infra', 'mgmt'] },
+      { name: 'Wi-Fi Optimization (Bridge Links)', domains: ['infra'] },
+      { name: 'Server Maintenance', domains: ['infra'] },
+      { name: 'Hardware Deployment', domains: ['infra'] },
+    ],
   },
   {
-    icon: '&#9729;',
-    name: 'Cloud & Infrastructure',
-    skills: ['AWS', 'Azure', 'Docker', 'Kubernetes', 'Terraform', 'CI/CD', 'Linux', 'Networking'],
+    icon: '&#129302;', // Robot
+    name: 'AI & Local Automation',
+    skills: [
+      { name: 'Local LLM Hosting (Ollama)', domains: ['infra', 'ai'] },
+      { name: 'Claude AI / Claude Code', domains: ['ai', 'dev'] },
+      { name: 'OpenClaw Integrations', domains: ['ai', 'dev'] },
+      { name: 'Workflow Automation', domains: ['infra', 'dev', 'ai'] },
+    ],
   },
   {
-    icon: '&#129302;',
-    name: 'AI & Automation',
-    skills: ['Claude AI', 'Claude Code', 'Prompt Engineering', 'GitHub Copilot', 'LLM APIs', 'Workflow Automation'],
+    icon: '&#128736;', // Tools
+    name: 'Device & Systems Management',
+    skills: [
+      { name: 'JAMF (Apple MDM)', domains: ['infra'] },
+      { name: 'Microsoft SCCM', domains: ['infra'] },
+      { name: 'Extron GVE (A/V Layouts)', domains: ['infra'] },
+      { name: 'Active Directory / Entra', domains: ['infra', 'mgmt'] },
+      { name: 'Google Workspace', domains: ['infra', 'mgmt'] },
+    ],
   },
   {
-    icon: '&#128188;',
-    name: 'Leadership & Management',
-    skills: ['Strategic Planning', 'Team Building', 'Budget Management', 'Vendor Relations', 'Agile/Scrum', 'ITIL'],
+    icon: '&#128274;', // Lock
+    name: 'Cybersecurity & Compliance',
+    skills: [
+      { name: 'Enterprise 2FA/MFA Rollouts', domains: ['infra', 'mgmt'] },
+      { name: 'Systems Access Control', domains: ['infra'] },
+      { name: 'Security Protocol Development', domains: ['mgmt', 'infra'] },
+      { name: 'Staff Training', domains: ['mgmt'] },
+    ],
   },
   {
-    icon: '&#128736;',
-    name: 'DevOps & Tools',
-    skills: ['Git', 'GitHub Actions', 'Jenkins', 'Datadog', 'Jira', 'Confluence', 'VS Code', 'Vim'],
+    icon: '&#128187;', // Laptop
+    name: 'Software Engineering',
+    skills: [
+      { name: 'React.js (Vite)', domains: ['dev'] },
+      { name: 'Node.js', domains: ['dev'] },
+      { name: 'JavaScript / API Integrations', domains: ['dev'] },
+      { name: 'Markdown CMS Architecting', domains: ['dev', 'infra'] },
+    ],
   },
   {
-    icon: '&#128274;',
-    name: 'Security & Compliance',
-    skills: ['Zero Trust', 'SOC 2', 'HIPAA', 'Incident Response', 'Pen Testing', 'SSO/SAML'],
+    icon: '&#128188;', // Briefcase
+    name: 'Leadership & IT Strategy',
+    skills: [
+      { name: 'Strategic Budgeting & Planning', domains: ['mgmt'] },
+      { name: 'Tier 1-3 Support Mentorship', domains: ['mgmt', 'infra'] },
+      { name: 'SLA Development & Ticketing', domains: ['mgmt'] },
+      { name: 'Vendor Relations & Procurement', domains: ['mgmt'] },
+    ],
   },
 ]
 
@@ -38,8 +76,18 @@ function Skills() {
         <div className="section-label">Skills &amp; Expertise</div>
         <h2 className="section-title">Technical Toolkit</h2>
         <p className="section-subtitle">
-          A blend of hands-on technical skills and executive leadership capabilities.
+          An authentic mapping of the technologies I deploy, manage, and build with. Note the color-coded dots representing cross-domain overlap.
         </p>
+      </div>
+
+      {/* The Domain Legend */}
+      <div className="domain-legend">
+        {Object.entries(DOMAINS).map(([key, domain]) => (
+          <div className="legend-item" key={key}>
+            <span className={`domain-dot ${domain.colorClass}`}></span>
+            {domain.label}
+          </div>
+        ))}
       </div>
 
       <div className="skills-grid">
@@ -52,9 +100,22 @@ function Skills() {
               />
               <span className="skill-category-name">{cat.name}</span>
             </div>
+
             <div className="skill-list">
               {cat.skills.map((s) => (
-                <span className="skill-tag" key={s}>{s}</span>
+                <div className="skill-tag" key={s.name}>
+                  {/* Render the mapped domain dots for cross-discipline indication */}
+                  <div className="domain-dots-container">
+                    {s.domains && s.domains.map(domainKey => (
+                      <span
+                        key={domainKey}
+                        className={`domain-dot ${DOMAINS[domainKey]?.colorClass}`}
+                        title={DOMAINS[domainKey]?.label}
+                      ></span>
+                    ))}
+                  </div>
+                  {s.name}
+                </div>
               ))}
             </div>
           </div>

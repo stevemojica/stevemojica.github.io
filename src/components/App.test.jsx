@@ -1,24 +1,30 @@
 import { render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import { describe, it, expect } from 'vitest'
 import App from '../App'
 
 describe('App', () => {
   it('renders the profile page with key sections', () => {
-    render(<App />)
+    render(
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>
+    )
     expect(screen.getByText('Steve Mojica')).toBeInTheDocument()
-    expect(screen.getByText('Director by Day, Developer by Night')).toBeInTheDocument()
-    expect(screen.getByText("What I'm Building")).toBeInTheDocument()
-    expect(screen.getByText('Technical Toolkit')).toBeInTheDocument()
-    expect(screen.getByText('From the Terminal')).toBeInTheDocument()
-    expect(screen.getByText('The Path So Far')).toBeInTheDocument()
+    expect(screen.getByText('IT Professional')).toBeInTheDocument()
+    expect(screen.getByText("GitHub Portfolio")).toBeInTheDocument()
+    expect(screen.getByText('Documenting the Journey')).toBeInTheDocument()
   })
 
   it('renders navigation links', () => {
-    render(<App />)
+    render(
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>
+    )
     const nav = screen.getByRole('navigation')
     expect(nav).toBeInTheDocument()
     expect(screen.getByText('About')).toBeInTheDocument()
-    expect(screen.getAllByText('Skills').length).toBeGreaterThanOrEqual(1)
-    expect(screen.getByText('Thoughts')).toBeInTheDocument()
+    expect(screen.getAllByText('Open Source').length).toBeGreaterThanOrEqual(1)
   })
 })

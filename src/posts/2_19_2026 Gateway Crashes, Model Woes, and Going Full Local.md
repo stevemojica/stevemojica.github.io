@@ -1,3 +1,14 @@
+---
+slug: 'https://github.com/stevemojica/stevemojica.github.io/blob/master/src/posts/tailscale-termius-mobile-ssh.md)'
+category: 'coding'
+label: 'React'
+date: 'Feb 2026'
+readTime: '4 min read'
+title: 'Mobile SSH Access to Cloud Terminal via Tailscale + Termius
+'
+excerpt: 'accessing claude code remotely'
+---
+
 # 🦞 Gateway Crashes, Model Woes, and Going Full Local (Feb 19, 2026)
 
 > **TL;DR:** Three separate issues hit on the same day — a rogue cron job crashing the gateway via an EBADF bug, NVIDIA's Llama 3.3 70B rejecting parallel tool calls, and the gateway not recovering after crashes. All three fixed. Setup is now 100% local on Ollama with a self-healing gateway.

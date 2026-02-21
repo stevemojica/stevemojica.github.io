@@ -1,3 +1,13 @@
+---
+slug: 'openclaw-local-ollama-setup.md'
+category: 'ai'
+label: 'ollama and openclaw'
+date: 'Jan 2026'
+readTime: '8 min read'
+title: 'Running OpenClaw with Local Ollama LLMs (No API Key Required)'
+excerpt: 'How i got Local LLM to work with Openclaw'
+---
+
 # 🦞 Running OpenClaw with Local Ollama LLMs (No API Key Required)
 
 > **TL;DR:** OpenClaw defaults to Anthropic's API. You can ditch the cloud dependency and run fully local models using Ollama — but there's a non-obvious config step that will bite you if you skip it. This post documents exactly what we had to do to get it working.

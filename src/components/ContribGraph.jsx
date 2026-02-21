@@ -25,6 +25,7 @@ function ContribGraph() {
     <div className="contrib-graph">
       <GitHubCalendar
         username="stevemojica"
+        year={new Date().getFullYear()}
         theme={explicitTheme}
         colorScheme="dark"
         blockSize={12}

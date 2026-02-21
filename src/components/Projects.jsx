@@ -1,57 +1,34 @@
+import { useState, useEffect } from 'react'
 import ContribGraph from './ContribGraph'
 
-const PROJECTS = [
-  {
-    name: 'claude-workflow-toolkit',
-    desc: 'A collection of Claude AI prompts, templates, and automation scripts for IT teams. Streamlines code reviews, documentation generation, and incident response.',
-    tech: ['Claude AI', 'Python', 'Bash'],
-    badge: 'featured',
-    stars: 42,
-    forks: 12,
-  },
-  {
-    name: 'infra-dashboard',
-    desc: 'Real-time infrastructure monitoring dashboard built with React. Tracks server health, deployment status, and team velocity metrics.',
-    tech: ['React', 'Node.js', 'Docker'],
-    badge: 'featured',
-    stars: 28,
-    forks: 8,
-  },
-  {
-    name: 'openclaw-contrib',
-    desc: 'My contributions to the OpenClaw ecosystem — plugins, documentation improvements, and community tools that make legal tech more accessible.',
-    tech: ['JavaScript', 'OpenClaw', 'API'],
-    badge: 'wip',
-    stars: 15,
-    forks: 4,
-  },
-  {
-    name: 'team-automator',
-    desc: 'Automation framework for IT operations. Handles onboarding, access provisioning, and compliance reporting with minimal manual intervention.',
-    tech: ['Python', 'Terraform', 'AWS'],
-    badge: 'featured',
-    stars: 35,
-    forks: 10,
-  },
-  {
-    name: 'ai-code-review-bot',
-    desc: 'GitHub Action that uses Claude AI to perform intelligent code reviews on pull requests. Catches bugs, suggests improvements, and enforces team standards.',
-    tech: ['GitHub Actions', 'Claude API', 'TypeScript'],
-    badge: 'wip',
-    stars: 19,
-    forks: 6,
-  },
-  {
-    name: 'leadership-metrics',
-    desc: 'Dashboard for tracking engineering team health — DORA metrics, sprint velocity, and developer experience scores. Data-driven management.',
-    tech: ['React', 'D3.js', 'PostgreSQL'],
-    badge: null,
-    stars: 11,
-    forks: 3,
-  },
-]
-
 function Projects() {
+  const [projects, setProjects] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    // We are pulling from the user crazymojo83 (found in existing package.json context)
+    const fetchRepos = async () => {
+      try {
+        const response = await fetch(
+          'https://api.github.com/users/crazymojo83/repos?sort=updated&per_page=6'
+        )
+        if (!response.ok) {
+          throw new Error('Failed to fetch repositories')
+        }
+        const data = await response.json()
+        setProjects(data)
+      } catch (err) {
+        console.error(err)
+        setError('Could not load GitHub projects at this time.')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchRepos()
+  }, [])
+
   return (
     <section className="section" id="projects">
       <div className="section-header">
@@ -62,35 +39,57 @@ function Projects() {
         </p>
       </div>
 
-      <div className="projects-grid">
-        {PROJECTS.map((p) => (
-          <div className="project-card" key={p.name}>
-            <div className="project-card-header">
-              <span className="project-icon">&#128206;</span>
-              {p.badge && (
-                <span className={`project-badge project-badge--${p.badge}`}>
-                  {p.badge === 'featured' ? 'Featured' : 'In Progress'}
+      {loading && (
+        <div className="section-subtitle" style={{ textAlign: 'center', marginTop: '2rem' }}>
+          Loading repositories from GitHub...
+        </div>
+      )}
+
+      {error && (
+        <div className="section-subtitle error-state" style={{ textAlign: 'center', marginTop: '2rem', color: 'var(--accent)' }}>
+          {error}
+        </div>
+      )}
+
+      {!loading && !error && (
+        <div className="projects-grid">
+          {projects.map((repo) => (
+            <a
+              href={repo.html_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="project-card"
+              key={repo.id}
+              style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column' }}
+            >
+              <div className="project-card-header">
+                <span className="project-icon">&#128206;</span>
+                {/* Dynamically assign a Featured badge if it has a decent amount of stars, otherwise just note it is public */}
+                <span className={`project-badge project-badge--${repo.stargazers_count > 5 ? 'featured' : 'public'}`}>
+                  {repo.stargazers_count > 5 ? 'Featured' : 'Public'}
                 </span>
-              )}
-            </div>
-            <div className="project-name">{p.name}</div>
-            <div className="project-desc">{p.desc}</div>
-            <div className="project-footer">
-              <div className="project-tech">
-                {p.tech.map((t) => (
-                  <span className="tech-tag" key={t}>
-                    {t}
-                  </span>
-                ))}
               </div>
-              <div className="project-stats">
-                <span className="project-stat">&#9734; {p.stars}</span>
-                <span className="project-stat">&#9906; {p.forks}</span>
+              <div className="project-name" style={{ wordBreak: 'break-all' }}>{repo.name}</div>
+              <div className="project-desc" style={{ flexGrow: 1 }}>
+                {repo.description || 'No description provided on GitHub.'}
               </div>
-            </div>
-          </div>
-        ))}
-      </div>
+              <div className="project-footer">
+                <div className="project-tech">
+                  {repo.language && (
+                    <span className="tech-tag">
+                      {repo.language}
+                    </span>
+                  )}
+                </div>
+                <div className="project-stats">
+                  <span className="project-stat">&#9734; {repo.stargazers_count}</span>
+                  <span className="project-stat">&#9906; {repo.forks_count}</span>
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      )}
 
       <ContribGraph />
     </section>

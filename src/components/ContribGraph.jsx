@@ -1,49 +1,41 @@
-import { useMemo } from 'react'
-
-function generateContribData() {
-  const cells = []
-  const weeks = 52
-  for (let w = 0; w < weeks; w++) {
-    for (let d = 0; d < 7; d++) {
-      const rand = Math.random()
-      let level
-      if (rand < 0.3) level = 0
-      else if (rand < 0.55) level = 1
-      else if (rand < 0.75) level = 2
-      else if (rand < 0.9) level = 3
-      else level = 4
-      cells.push(level)
-    }
-  }
-  return cells
-}
+import { GitHubCalendar } from 'react-github-calendar';
 
 function ContribGraph() {
-  const cells = useMemo(() => generateContribData(), [])
+  // We use explicit theme object mapping to apply the custom CSS crimson
+  // variables rather than the default GitHub green shades.
+  // level 0 is empty, 1-4 are increasing intensity.
+  const explicitTheme = {
+    light: [
+      '#171d27',                  // Level 0
+      'rgba(220, 20, 60, 0.2)',   // Level 1
+      'rgba(220, 20, 60, 0.5)',   // Level 2
+      'rgba(220, 20, 60, 0.8)',   // Level 3
+      'rgba(220, 20, 60, 1.0)',   // Level 4
+    ],
+    dark: [
+      '#171d27',                  // Level 0
+      'rgba(220, 20, 60, 0.2)',
+      'rgba(220, 20, 60, 0.5)',
+      'rgba(220, 20, 60, 0.8)',
+      'rgba(220, 20, 60, 1.0)',
+    ]
+  };
 
   return (
     <div className="contrib-graph">
-      <div style={{ fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.75rem' }}>
-        365 contributions in the last year
-      </div>
-      <div className="contrib-grid">
-        {cells.map((level, i) => (
-          <div
-            key={i}
-            className={`contrib-cell contrib-${level}`}
-            title={`Contribution level: ${level}`}
-          />
-        ))}
-      </div>
-      <div className="contrib-legend">
-        Less
-        <div className="contrib-legend-cell contrib-0" />
-        <div className="contrib-legend-cell contrib-1" />
-        <div className="contrib-legend-cell contrib-2" />
-        <div className="contrib-legend-cell contrib-3" />
-        <div className="contrib-legend-cell contrib-4" />
-        More
-      </div>
+      <GitHubCalendar
+        username="crazymojo83"
+        theme={explicitTheme}
+        colorScheme="dark"
+        blockSize={12}
+        blockMargin={4}
+        fontSize={14}
+        style={{
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center'
+        }}
+      />
     </div>
   )
 }

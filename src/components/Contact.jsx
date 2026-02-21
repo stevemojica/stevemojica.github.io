@@ -27,7 +27,7 @@ function Contact() {
             &#128187; GitHub
           </a>
           <a
-            href="https://linkedin.com/in/stevemojica"
+            href="https://www.linkedin.com/in/stevenmojica/"
             target="_blank"
             rel="noopener noreferrer"
             className="contact-link"

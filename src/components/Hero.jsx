@@ -9,7 +9,7 @@ function Hero() {
           Available for collaboration
         </div>
 
-        <h1 className="hero-name">Your Name</h1>
+        <h1 className="hero-name">Steve Mojica</h1>
         <p className="hero-title">
           <span>IT Director</span> &middot; Developer &middot; Technology Leader
         </p>
@@ -28,7 +28,7 @@ function Hero() {
             &#128221; Read My Thoughts
           </a>
           <a
-            href="https://github.com/your-username"
+            href="https://github.com/stevemojica"
             target="_blank"
             rel="noopener noreferrer"
             className="hero-link hero-link--secondary"

@@ -19,7 +19,7 @@ function Contact() {
 
         <div className="contact-links">
           <a
-            href="https://github.com/your-username"
+            href="https://github.com/stevemojica"
             target="_blank"
             rel="noopener noreferrer"
             className="contact-link"
@@ -27,7 +27,7 @@ function Contact() {
             &#128187; GitHub
           </a>
           <a
-            href="https://linkedin.com/in/your-profile"
+            href="https://linkedin.com/in/stevemojica"
             target="_blank"
             rel="noopener noreferrer"
             className="contact-link"
@@ -35,13 +35,13 @@ function Contact() {
             &#128188; LinkedIn
           </a>
           <a
-            href="mailto:your.email@example.com"
+            href="mailto:stevemojica@users.noreply.github.com"
             className="contact-link"
           >
             &#9993; Email
           </a>
           <a
-            href="https://twitter.com/your-handle"
+            href="https://twitter.com/stevemojica"
             target="_blank"
             rel="noopener noreferrer"
             className="contact-link"
@@ -52,7 +52,7 @@ function Contact() {
       </section>
 
       <footer className="footer">
-        <div>&copy; {new Date().getFullYear()} Your Name. All rights reserved.</div>
+        <div>&copy; {new Date().getFullYear()} Steve Mojica. All rights reserved.</div>
         <div className="footer-built-with">
           Built with React + Vite &middot; Powered by Claude AI
         </div>

@@ -4,21 +4,21 @@ function Contact() {
   const embedRef = useRef(null);
 
   useEffect(() => {
-    // Twitter's widgets.js (loaded in index.html) may fire before React
-    // renders this component. Poll briefly then trigger a re-scan.
-    let attempts = 0;
-    const maxAttempts = 20; // 10 seconds max
-    const interval = setInterval(() => {
-      attempts++;
-      if (window.twttr && window.twttr.widgets) {
-        window.twttr.widgets.load(embedRef.current);
-        clearInterval(interval);
-      } else if (attempts >= maxAttempts) {
-        clearInterval(interval);
-      }
-    }, 500);
+    // If widgets.js already ran (e.g. navigating back to this page),
+    // just tell it to process the anchor we just mounted.
+    if (window.twttr && window.twttr.widgets) {
+      window.twttr.widgets.load(embedRef.current);
+      return;
+    }
 
-    return () => clearInterval(interval);
+    // First visit: inject the script now, AFTER the <a> is in the DOM.
+    // This mirrors exactly how Twitter's own embed snippet works.
+    const script = document.createElement('script');
+    script.id = 'twitter-wjs';
+    script.src = 'https://platform.twitter.com/widgets.js';
+    script.async = true;
+    script.charset = 'utf-8';
+    document.body.appendChild(script);
   }, []);
 
   return (
@@ -92,7 +92,6 @@ function Contact() {
                 className="twitter-timeline"
                 data-theme="dark"
                 data-height="500"
-                data-width="100%"
                 href="https://twitter.com/SteveMojica?ref_src=twsrc%5Etfw"
               >
                 Tweets by SteveMojica

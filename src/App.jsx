@@ -12,6 +12,7 @@ import BlogPost from './components/BlogPost'
 import SocialPostGenerator from './components/SocialPostGenerator'
 import Tools from './components/Tools'
 import ToolDetail from './components/ToolDetail'
+import ClaudePlugins from './components/ClaudePlugins'
 
 function HomePage() {
   return (
@@ -22,6 +23,8 @@ function HomePage() {
       <Blog />
       <div className="divider" />
       <Projects />
+      <div className="divider" />
+      <ClaudePlugins />
       <div className="divider" />
       <About />
       <div className="divider" />

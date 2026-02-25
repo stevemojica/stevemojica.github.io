@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 const NAV_ITEMS = [
   { label: 'About', href: '#about' },
   { label: 'Projects', href: '#projects' },
+  { label: 'Plugins', href: '#plugins' },
   { label: 'Skills', href: '#skills' },
   { label: 'Thoughts', href: '#blog' },
   { label: 'Journey', href: '#journey' },

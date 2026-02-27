@@ -74,6 +74,12 @@ async function zdFetch(creds, path, options = {}) {
 
   updateRateLimits(res.headers)
 
+  // Surface proxy-level errors with their message
+  if (res.status === 502 || res.status === 500) {
+    let detail = res.statusText
+    try { const body = await res.json(); detail = body.error || detail } catch {}
+    throw new Error(detail)
+  }
   if (res.status === 401) throw new Error('Invalid credentials. Check your subdomain, email, and API token.')
   if (res.status === 429) {
     const retryAfter = res.headers.get('retry-after') || 60

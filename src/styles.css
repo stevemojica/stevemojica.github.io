@@ -1885,6 +1885,10 @@ body {
   padding: 1.5rem;
   overflow-x: auto;
   margin-top: 1.5rem;
+  width: fit-content;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .contrib-grid {

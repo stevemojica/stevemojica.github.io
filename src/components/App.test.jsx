@@ -19,7 +19,7 @@ describe('App', () => {
         </ThemeProvider>
       </MemoryRouter>
     )
-    expect(screen.getByText('Steve Mojica')).toBeInTheDocument()
+    expect(screen.getByText('Steven Mojica')).toBeInTheDocument()
     expect(screen.getByText('IT Professional')).toBeInTheDocument()
     expect(screen.getByText("GitHub Portfolio")).toBeInTheDocument()
     expect(screen.getByText('Documenting the Journey')).toBeInTheDocument()

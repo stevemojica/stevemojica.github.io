@@ -1,33 +1,52 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import ContribGraph from './ContribGraph'
+
+function SkeletonCard() {
+  return (
+    <div className="project-card skeleton-card" aria-hidden="true">
+      <div className="project-card-header">
+        <span className="skeleton-line" style={{ width: '24px', height: '24px', borderRadius: '6px' }} />
+        <span className="skeleton-line" style={{ width: '60px', height: '20px', borderRadius: '20px' }} />
+      </div>
+      <div className="skeleton-line" style={{ width: '70%', height: '1.1rem', marginBottom: '0.75rem' }} />
+      <div className="skeleton-line" style={{ width: '100%', height: '0.85rem', marginBottom: '0.4rem' }} />
+      <div className="skeleton-line" style={{ width: '85%', height: '0.85rem', marginBottom: '1.5rem' }} />
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 'auto' }}>
+        <span className="skeleton-line" style={{ width: '50px', height: '20px', borderRadius: '20px' }} />
+        <span className="skeleton-line" style={{ width: '60px', height: '16px' }} />
+      </div>
+    </div>
+  )
+}
 
 function Projects() {
   const [projects, setProjects] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  useEffect(() => {
-    // We are pulling from the user stevemojica
-    const fetchRepos = async () => {
-      try {
-        const response = await fetch(
-          'https://api.github.com/users/stevemojica/repos?sort=updated&per_page=6'
-        )
-        if (!response.ok) {
-          throw new Error('Failed to fetch repositories')
-        }
-        const data = await response.json()
-        setProjects(data)
-      } catch (err) {
-        console.error(err)
-        setError('Could not load GitHub projects at this time.')
-      } finally {
-        setLoading(false)
+  const fetchRepos = useCallback(async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const response = await fetch(
+        'https://api.github.com/users/stevemojica/repos?sort=updated&per_page=6'
+      )
+      if (!response.ok) {
+        throw new Error('Failed to fetch repositories')
       }
+      const data = await response.json()
+      setProjects(data)
+    } catch (err) {
+      console.error(err)
+      setError('Could not load GitHub projects at this time.')
+    } finally {
+      setLoading(false)
     }
-
-    fetchRepos()
   }, [])
+
+  useEffect(() => {
+    fetchRepos()
+  }, [fetchRepos])
 
   return (
     <section className="section" id="projects">
@@ -40,14 +59,19 @@ function Projects() {
       </div>
 
       {loading && (
-        <div className="section-subtitle" style={{ textAlign: 'center', marginTop: '2rem' }}>
-          Loading repositories from GitHub...
+        <div className="projects-grid">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <SkeletonCard key={i} />
+          ))}
         </div>
       )}
 
       {error && (
-        <div className="section-subtitle error-state" style={{ textAlign: 'center', marginTop: '2rem', color: 'var(--accent)' }}>
-          {error}
+        <div className="error-banner">
+          <p>{error}</p>
+          <button className="retry-btn" onClick={fetchRepos}>
+            Try again
+          </button>
         </div>
       )}
 
@@ -64,7 +88,6 @@ function Projects() {
             >
               <div className="project-card-header">
                 <span className="project-icon">&#128206;</span>
-                {/* Dynamically assign a Featured badge if it has a decent amount of stars, otherwise just note it is public */}
                 <span className={`project-badge project-badge--${repo.stargazers_count > 5 ? 'featured' : 'public'}`}>
                   {repo.stargazers_count > 5 ? 'Featured' : 'Public'}
                 </span>

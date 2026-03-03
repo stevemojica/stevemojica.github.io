@@ -1,6 +1,7 @@
 import { useParams, Link } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import ThemeToggle from './ThemeToggle'
 import tools from '../tools/social-post-generator'
 
 export default function ToolDetail() {
@@ -12,6 +13,7 @@ export default function ToolDetail() {
       <div className="tool-detail-page">
         <nav className="tools-nav">
           <Link to="/tools" className="back-link">&larr; Back to tools</Link>
+          <ThemeToggle />
         </nav>
         <div className="tool-detail-container error-state">
           <h2>Tool not found</h2>

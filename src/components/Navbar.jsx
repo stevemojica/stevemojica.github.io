@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import ThemeToggle from './ThemeToggle'
 
 const NAV_ITEMS = [
   { label: 'About', href: '#about' },
@@ -39,13 +40,16 @@ function Navbar() {
           ))}
         </ul>
 
-        <button
-          className="mobile-menu-btn"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle navigation"
-        >
-          {menuOpen ? '\u2715' : '\u2630'}
-        </button>
+        <div className="nav-actions">
+          <ThemeToggle />
+          <button
+            className="mobile-menu-btn"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Toggle navigation"
+          >
+            {menuOpen ? '\u2715' : '\u2630'}
+          </button>
+        </div>
       </div>
     </nav>
   )

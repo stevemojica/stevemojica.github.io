@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
+import ThemeToggle from './ThemeToggle';
 
 // Custom lightweight YAML frontmatter parser
 function parseFrontmatter(markdown) {
@@ -99,6 +100,7 @@ function BlogPost() {
                 <Link to="/" className="back-link">
                     &larr; Back
                 </Link>
+                <ThemeToggle />
             </nav>
             <article className="blog-post-container">
                 <ReactMarkdown className="markdown-body">

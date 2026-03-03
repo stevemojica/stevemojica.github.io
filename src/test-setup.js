@@ -8,3 +8,17 @@ if (typeof CSS === 'undefined') {
 if (typeof CSS.supports !== 'function') {
     CSS.supports = () => false
 }
+
+// JSDOM does not implement window.matchMedia, needed by ThemeContext.
+if (typeof window.matchMedia !== 'function') {
+    window.matchMedia = (query) => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addListener: () => {},
+        removeListener: () => {},
+        addEventListener: () => {},
+        removeEventListener: () => {},
+        dispatchEvent: () => false,
+    })
+}

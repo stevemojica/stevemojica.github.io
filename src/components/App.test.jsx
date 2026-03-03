@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { describe, it, expect, vi } from 'vitest'
+import { ThemeProvider } from '../ThemeContext'
 import App from '../App'
 
 // Mock the ContribGraph component because `react-activity-calendar` uses CSS properties
@@ -13,7 +14,9 @@ describe('App', () => {
   it('renders the profile page with key sections', () => {
     render(
       <MemoryRouter>
-        <App />
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
       </MemoryRouter>
     )
     expect(screen.getByText('Steve Mojica')).toBeInTheDocument()
@@ -25,7 +28,9 @@ describe('App', () => {
   it('renders navigation links', () => {
     render(
       <MemoryRouter>
-        <App />
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
       </MemoryRouter>
     )
     const nav = screen.getByRole('navigation')

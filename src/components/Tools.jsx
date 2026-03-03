@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import ThemeToggle from './ThemeToggle'
 import tools from '../tools/social-post-generator'
 
 const CATEGORY_COLORS = {
@@ -38,6 +39,7 @@ export default function Tools() {
     <div className="tools-page">
       <nav className="tools-nav">
         <Link to="/" className="back-link">&larr; Back to portfolio</Link>
+        <ThemeToggle />
       </nav>
 
       <div className="section-header">

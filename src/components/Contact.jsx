@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTheme } from '../ThemeContext';
 
 function Contact() {
   const embedRef = useRef(null);
   const [embedFailed, setEmbedFailed] = useState(false);
+  const { theme } = useTheme();
 
   useEffect(() => {
     const container = embedRef.current;
@@ -118,7 +120,7 @@ function Contact() {
             <div
               ref={embedRef}
               className="embed-inner"
-              style={{ background: 'rgba(255,255,255,0.02)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', transition: 'all var(--transition)', overflow: 'auto' }}
+              style={{ background: 'var(--overlay-subtle)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', transition: 'all var(--transition)', overflow: 'auto' }}
             >
               {embedFailed ? (
                 <div style={{ padding: '2rem', color: 'var(--text-secondary)', textAlign: 'center' }}>
@@ -136,7 +138,7 @@ function Contact() {
               ) : (
                 <a
                   className="twitter-timeline"
-                  data-theme="dark"
+                  data-theme={theme}
                   data-height="500"
                   href="https://twitter.com/SteveMojica?ref_src=twsrc%5Etfw"
                 >

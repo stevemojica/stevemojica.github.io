@@ -14,12 +14,14 @@ import SocialPostGenerator from './components/SocialPostGenerator'
 import Tools from './components/Tools'
 import ToolDetail from './components/ToolDetail'
 import ClaudePlugins from './components/ClaudePlugins'
+import CursorGlow from './components/CursorGlow'
 
 const ZendeskDashboard = lazy(() => import('./components/zendesk/ZendeskDashboard'))
 
 function HomePage() {
   return (
     <>
+      <CursorGlow />
       <a className="skip-to-content" href="#blog">Skip to content</a>
       <Navbar />
       <Hero />

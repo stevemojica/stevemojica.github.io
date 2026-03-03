@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 const REPO_OWNER = 'stevemojica'
 const REPO_NAME = 'Claude-Plugins'
@@ -12,21 +12,17 @@ function parseReadme(raw) {
   let inFeatures = false
 
   for (const line of lines) {
-    // Extract title from first h1 or h2
     if (!name && /^#{1,2}\s+/.test(line)) {
       name = line.replace(/^#{1,2}\s+/, '').trim()
       continue
     }
 
-    // Look for description — first non-empty paragraph after title
     if (name && !description && line.trim() && !line.startsWith('#') && !line.startsWith('-') && !line.startsWith('*')) {
-      // Skip lines that look like metadata
       if (/^\*\*/.test(line.trim()) || /^>/.test(line.trim())) continue
       description = line.trim()
       continue
     }
 
-    // Collect features from Key Features or Features section
     if (/^#{2,3}\s+(Key )?Features/i.test(line)) {
       inFeatures = true
       continue
@@ -81,59 +77,75 @@ function PluginCard({ plugin }) {
   )
 }
 
+function SkeletonPluginCard() {
+  return (
+    <div className="plugin-card skeleton-card" aria-hidden="true">
+      <div className="plugin-card-header">
+        <span className="skeleton-line" style={{ width: '28px', height: '28px', borderRadius: '8px' }} />
+        <span className="skeleton-line" style={{ width: '90px', height: '20px', borderRadius: '20px' }} />
+      </div>
+      <div className="skeleton-line" style={{ width: '60%', height: '1.1rem', marginBottom: '0.5rem', marginTop: '0.75rem' }} />
+      <div className="skeleton-line" style={{ width: '100%', height: '0.85rem', marginBottom: '0.4rem' }} />
+      <div className="skeleton-line" style={{ width: '90%', height: '0.85rem', marginBottom: '1rem' }} />
+      <div className="skeleton-line" style={{ width: '40%', height: '0.8rem', marginBottom: '0.3rem' }} />
+      <div className="skeleton-line" style={{ width: '55%', height: '0.8rem', marginBottom: '0.3rem' }} />
+      <div className="skeleton-line" style={{ width: '45%', height: '0.8rem' }} />
+    </div>
+  )
+}
+
 export default function ClaudePlugins() {
   const [plugins, setPlugins] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  useEffect(() => {
-    const fetchPlugins = async () => {
-      try {
-        // Fetch repo contents to find plugin directories
-        const res = await fetch(
-          `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents`
-        )
-        if (!res.ok) throw new Error('Failed to fetch plugin list')
-        const contents = await res.json()
+  const fetchPlugins = useCallback(async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const res = await fetch(
+        `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents`
+      )
+      if (!res.ok) throw new Error('Failed to fetch plugin list')
+      const contents = await res.json()
 
-        // Filter to directories only (exclude dotfiles, LICENSE, README, etc.)
-        const dirs = contents.filter(
-          item => item.type === 'dir' && !item.name.startsWith('.')
-        )
+      const dirs = contents.filter(
+        item => item.type === 'dir' && !item.name.startsWith('.')
+      )
 
-        // Fetch README for each plugin directory
-        const pluginData = await Promise.all(
-          dirs.map(async (dir) => {
-            try {
-              const readmeRes = await fetch(`${RAW_BASE}/${dir.name}/README.md`)
-              if (!readmeRes.ok) {
-                return { dir: dir.name, name: formatDirName(dir.name), description: '', features: [] }
-              }
-              const readmeText = await readmeRes.text()
-              const parsed = parseReadme(readmeText)
-              return {
-                dir: dir.name,
-                name: parsed.name || formatDirName(dir.name),
-                description: parsed.description,
-                features: parsed.features,
-              }
-            } catch {
+      const pluginData = await Promise.all(
+        dirs.map(async (dir) => {
+          try {
+            const readmeRes = await fetch(`${RAW_BASE}/${dir.name}/README.md`)
+            if (!readmeRes.ok) {
               return { dir: dir.name, name: formatDirName(dir.name), description: '', features: [] }
             }
-          })
-        )
+            const readmeText = await readmeRes.text()
+            const parsed = parseReadme(readmeText)
+            return {
+              dir: dir.name,
+              name: parsed.name || formatDirName(dir.name),
+              description: parsed.description,
+              features: parsed.features,
+            }
+          } catch {
+            return { dir: dir.name, name: formatDirName(dir.name), description: '', features: [] }
+          }
+        })
+      )
 
-        setPlugins(pluginData)
-      } catch (err) {
-        console.error(err)
-        setError('Could not load Claude Plugins at this time.')
-      } finally {
-        setLoading(false)
-      }
+      setPlugins(pluginData)
+    } catch (err) {
+      console.error(err)
+      setError('Could not load Claude Plugins at this time.')
+    } finally {
+      setLoading(false)
     }
-
-    fetchPlugins()
   }, [])
+
+  useEffect(() => {
+    fetchPlugins()
+  }, [fetchPlugins])
 
   return (
     <section className="section" id="plugins">
@@ -155,14 +167,19 @@ export default function ClaudePlugins() {
       </div>
 
       {loading && (
-        <div className="section-subtitle" style={{ textAlign: 'center', marginTop: '2rem' }}>
-          Loading plugins from GitHub...
+        <div className="plugins-grid">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <SkeletonPluginCard key={i} />
+          ))}
         </div>
       )}
 
       {error && (
-        <div className="section-subtitle" style={{ textAlign: 'center', marginTop: '2rem', color: 'var(--accent)' }}>
-          {error}
+        <div className="error-banner">
+          <p>{error}</p>
+          <button className="retry-btn" onClick={fetchPlugins}>
+            Try again
+          </button>
         </div>
       )}
 

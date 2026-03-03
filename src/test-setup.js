@@ -9,6 +9,16 @@ if (typeof CSS.supports !== 'function') {
     CSS.supports = () => false
 }
 
+// JSDOM does not implement IntersectionObserver, needed by Navbar scroll tracking.
+if (typeof IntersectionObserver === 'undefined') {
+    global.IntersectionObserver = class {
+        constructor() {}
+        observe() {}
+        unobserve() {}
+        disconnect() {}
+    }
+}
+
 // JSDOM does not implement window.matchMedia, needed by ThemeContext.
 if (typeof window.matchMedia !== 'function') {
     window.matchMedia = (query) => ({

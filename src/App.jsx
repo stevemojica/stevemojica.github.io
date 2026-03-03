@@ -20,6 +20,7 @@ const ZendeskDashboard = lazy(() => import('./components/zendesk/ZendeskDashboar
 function HomePage() {
   return (
     <>
+      <a className="skip-to-content" href="#blog">Skip to content</a>
       <Navbar />
       <Hero />
       <div className="divider" />

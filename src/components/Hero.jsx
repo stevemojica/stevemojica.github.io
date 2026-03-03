@@ -1,4 +1,15 @@
+import { useState, useEffect } from 'react'
+
 function Hero() {
+  const [repoCount, setRepoCount] = useState(null)
+
+  useEffect(() => {
+    fetch('https://api.github.com/users/stevemojica')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => { if (data) setRepoCount(data.public_repos) })
+      .catch(() => {})
+  }, [])
+
   return (
     <section className="hero" id="hero">
       <div className="hero-content">
@@ -53,8 +64,8 @@ function Hero() {
             <div className="hero-stat-label">Team Members Led</div>
           </div>
           <div className="hero-stat">
-            <div className="hero-stat-value">&#9734;</div>
-            <div className="hero-stat-label">Open Source</div>
+            <div className="hero-stat-value">{repoCount ?? '...'}</div>
+            <div className="hero-stat-label">Public Repos</div>
           </div>
         </div>
       </div>

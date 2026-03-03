@@ -14,7 +14,7 @@ function Hero() {
     <section className="hero" id="hero">
       <div className="hero-content">
         <div className="hero-avatar">
-          <img src="/avatar.jpg" alt="Steve Mojica" className="hero-avatar-img" />
+          <img src="/avatar.jpg" alt="Steven Mojica" className="hero-avatar-img" />
         </div>
 
         <div className="hero-status">
@@ -22,7 +22,7 @@ function Hero() {
           Building in Public
         </div>
 
-        <h1 className="hero-name">Steve Mojica</h1>
+        <h1 className="hero-name">Steven Mojica</h1>
         <p className="hero-title">
           <span>IT Professional</span> &middot; Network Administrator &middot; Coder
         </p>

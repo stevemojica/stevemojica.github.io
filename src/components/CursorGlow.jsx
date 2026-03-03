@@ -11,7 +11,7 @@ export default function CursorGlow() {
       glow.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`
       glow.style.opacity = '1'
 
-      const target = e.target.closest('.nav-links a, .hero-link')
+      const target = e.target.closest('.nav-links > li > a, .hero-link')
       if (target) {
         const rect = target.getBoundingClientRect()
         target.style.setProperty('--glow-x', `${e.clientX - rect.left}px`)

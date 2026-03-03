@@ -1481,7 +1481,20 @@ body {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 3rem;
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-md), var(--shadow-glow);
+  position: relative;
+  overflow: hidden;
+}
+
+.blog-post-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--gradient-accent);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
 .blog-post-container.loading-state,

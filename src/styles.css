@@ -889,7 +889,15 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 3rem;
-  align-items: center;
+  align-items: start;
+}
+
+.about-header-col .section-header {
+  text-align: left;
+}
+
+.about-header-col .about-text {
+  margin-top: 2rem;
 }
 
 .about-text p {

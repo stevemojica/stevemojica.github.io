@@ -57,18 +57,19 @@ export default function useZendeskData(timeRange = 'daily', refreshInterval = '5
         getUsers(creds),
       ])
 
+      const allTickets = [...rangeTickets, ...openTickets]
       const transformed = {
         summary: computeSummaryStats(rangeTickets, openTickets),
-        byStatus: groupByStatus([...rangeTickets, ...openTickets]),
-        byPriority: groupByPriority([...rangeTickets, ...openTickets]),
-        byTags: groupByTags([...rangeTickets, ...openTickets]),
-        byGroup: groupByGroup([...rangeTickets, ...openTickets], groupMap),
-        byAssignee: groupByAssignee([...rangeTickets, ...openTickets], userMap),
+        byStatus: groupByStatus(allTickets),
+        byPriority: groupByPriority(allTickets),
+        byTags: groupByTags(allTickets),
+        byGroup: groupByGroup(allTickets, groupMap),
+        byAssignee: groupByAssignee(allTickets, userMap),
         byChannel: groupByChannel(rangeTickets),
         trends: ticketsByDate(rangeTickets, timeRange),
         heatmap: ticketsByHour(rangeTickets),
         topRequesters: topRequesters(rangeTickets),
-        recentTickets: rangeTickets
+        recentTickets: [...rangeTickets]
           .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
           .slice(0, 50),
         groupMap,

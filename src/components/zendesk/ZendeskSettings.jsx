@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { getCredentials, saveCredentials, clearCredentials, testConnection } from '../../services/zendeskApi'
 
-export default function ZendeskSettings({ onConnected, onClose }) {
+export default function ZendeskSettings({ onConnected, onDisconnected, onClose }) {
   const existing = getCredentials()
   const [subdomain, setSubdomain] = useState(existing?.subdomain || '')
   const [email, setEmail] = useState(existing?.email || '')
@@ -38,7 +38,7 @@ export default function ZendeskSettings({ onConnected, onClose }) {
     setEmail('')
     setApiToken('')
     setStatus(null)
-    onConnected?.()
+    onDisconnected?.()
   }
 
   return (

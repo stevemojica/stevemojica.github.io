@@ -28,12 +28,11 @@ const REFRESH_OPTIONS = [
 ]
 
 export default function ZendeskDashboard() {
-  const [showSettings, setShowSettings] = useState(!getCredentials())
+  const creds = getCredentials()
+  const [showSettings, setShowSettings] = useState(!creds)
   const [timeRange, setTimeRange] = useState('daily')
   const [refreshInterval, setRefreshInterval] = useState('5min')
   const { data, loading, error, refresh, lastUpdated, rateLimits } = useZendeskData(timeRange, refreshInterval)
-
-  const creds = getCredentials()
 
   if (showSettings && !creds) {
     return (
@@ -41,7 +40,10 @@ export default function ZendeskDashboard() {
         <nav className="tools-nav">
           <Link to="/tools" className="back-link">&larr; Back to tools</Link>
         </nav>
-        <ZendeskSettings onConnected={() => setShowSettings(false)} />
+        <ZendeskSettings
+          onConnected={() => setShowSettings(false)}
+          onDisconnected={() => setShowSettings(true)}
+        />
       </div>
     )
   }
@@ -52,6 +54,7 @@ export default function ZendeskDashboard() {
       {showSettings && (
         <ZendeskSettings
           onConnected={() => setShowSettings(false)}
+          onDisconnected={() => setShowSettings(true)}
           onClose={() => setShowSettings(false)}
         />
       )}

@@ -12,14 +12,16 @@ export function computeSummaryStats(tickets, openTickets = []) {
     t => t.status === 'solved' && t.updated_at && new Date(t.updated_at) >= todayStart
   ).length
 
-  const openCount = openTickets.filter(t => t.status === 'open').length
-  const pendingCount = openTickets.filter(t => t.status === 'pending').length
-  const holdCount = openTickets.filter(t => t.status === 'hold').length
-
-  // Average age of open tickets in days
-  const openAges = openTickets
-    .filter(t => t.status === 'open' || t.status === 'pending' || t.status === 'hold')
-    .map(t => (now - new Date(t.created_at)) / (1000 * 60 * 60 * 24))
+  let openCount = 0, pendingCount = 0, holdCount = 0
+  const openAges = []
+  for (const t of openTickets) {
+    if (t.status === 'open') openCount++
+    else if (t.status === 'pending') pendingCount++
+    else if (t.status === 'hold') holdCount++
+    if (t.status === 'open' || t.status === 'pending' || t.status === 'hold') {
+      openAges.push((now - new Date(t.created_at)) / (1000 * 60 * 60 * 24))
+    }
+  }
   const avgAge = openAges.length ? Math.round(openAges.reduce((a, b) => a + b, 0) / openAges.length * 10) / 10 : 0
 
   // One-touch resolution: solved tickets with 1 or fewer comments from agents

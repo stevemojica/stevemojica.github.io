@@ -20,12 +20,32 @@ function stripMarkdown(text) {
         .trim();
 }
 
+// Split text into chunks that Chrome can handle (it silently fails on long utterances)
+function chunkText(text, maxLen = 200) {
+    const sentences = text.match(/[^.!?\n]+[.!?\n]*/g) || [text];
+    const chunks = [];
+    let current = '';
+
+    for (const sentence of sentences) {
+        if (current.length + sentence.length > maxLen && current.length > 0) {
+            chunks.push(current.trim());
+            current = '';
+        }
+        current += sentence;
+    }
+    if (current.trim()) chunks.push(current.trim());
+    return chunks;
+}
+
 const noop = () => {};
 const DISABLED = { status: 'idle', progress: 0, play: noop, pause: noop, stop: noop, supported: false };
 
 function useSpeechSynthesis(text) {
     const [status, setStatus] = useState('idle'); // idle | playing | paused
     const [progress, setProgress] = useState(0);
+    const [voicesReady, setVoicesReady] = useState(false);
+    const chunkIndexRef = useRef(0);
+    const chunksRef = useRef([]);
     const intervalRef = useRef(null);
     const startTimeRef = useRef(null);
     const estimatedDurationRef = useRef(0);
@@ -34,13 +54,26 @@ function useSpeechSynthesis(text) {
 
     const cleanText = useMemo(() => stripMarkdown(text || ''), [text]);
 
+    // Pre-load voices — Chrome loads them asynchronously
+    useEffect(() => {
+        if (!supported) return;
+        const voices = window.speechSynthesis.getVoices();
+        if (voices.length > 0) {
+            setVoicesReady(true);
+            return;
+        }
+        const onVoicesChanged = () => setVoicesReady(true);
+        window.speechSynthesis.addEventListener('voiceschanged', onVoicesChanged);
+        return () => window.speechSynthesis.removeEventListener('voiceschanged', onVoicesChanged);
+    }, [supported]);
+
     const getVoice = useCallback(() => {
         if (!supported) return null;
         const voices = window.speechSynthesis.getVoices();
         const english = voices.filter(v => v.lang.startsWith('en'));
         const natural = english.find(v => /natural|enhanced|premium/i.test(v.name));
         return natural || english[0] || voices[0] || null;
-    }, [supported]);
+    }, [supported, voicesReady]);
 
     const trackProgress = useCallback(() => {
         clearInterval(intervalRef.current);
@@ -53,14 +86,43 @@ function useSpeechSynthesis(text) {
         }, 500);
     }, []);
 
+    const resetPlayback = useCallback((finalProgress) => {
+        clearInterval(intervalRef.current);
+        chunkIndexRef.current = 0;
+        chunksRef.current = [];
+        setStatus('idle');
+        setProgress(finalProgress);
+        startTimeRef.current = null;
+    }, []);
+
     const stop = useCallback(() => {
         if (!supported) return;
         window.speechSynthesis.cancel();
-        clearInterval(intervalRef.current);
-        setStatus('idle');
-        setProgress(0);
-        startTimeRef.current = null;
-    }, [supported]);
+        resetPlayback(0);
+    }, [supported, resetPlayback]);
+
+    // Speaks one chunk at a time, then advances to the next
+    const speakChunk = useCallback((index) => {
+        const chunks = chunksRef.current;
+        if (index >= chunks.length) {
+            resetPlayback(100);
+            return;
+        }
+
+        const utterance = new SpeechSynthesisUtterance(chunks[index]);
+        const voice = getVoice();
+        if (voice) utterance.voice = voice;
+        utterance.rate = 1;
+        utterance.pitch = 1;
+
+        utterance.onend = () => {
+            chunkIndexRef.current = index + 1;
+            speakChunk(index + 1);
+        };
+        utterance.onerror = () => resetPlayback(0);
+
+        window.speechSynthesis.speak(utterance);
+    }, [getVoice, resetPlayback]);
 
     const play = useCallback(() => {
         if (!supported) return;
@@ -74,30 +136,19 @@ function useSpeechSynthesis(text) {
 
         window.speechSynthesis.cancel();
 
-        const utterance = new SpeechSynthesisUtterance(cleanText);
-        const voice = getVoice();
-        if (voice) utterance.voice = voice;
-        utterance.rate = 1;
-        utterance.pitch = 1;
+        const chunks = chunkText(cleanText);
+        chunksRef.current = chunks;
+        chunkIndexRef.current = 0;
 
         // Estimate duration: ~150 words per minute
         const wordCount = cleanText.split(/\s+/).length;
         estimatedDurationRef.current = (wordCount / 150) * 60;
 
-        const resetPlayback = (finalProgress) => {
-            clearInterval(intervalRef.current);
-            setStatus('idle');
-            setProgress(finalProgress);
-            startTimeRef.current = null;
-        };
-        utterance.onend = () => resetPlayback(100);
-        utterance.onerror = () => resetPlayback(0);
-
         startTimeRef.current = Date.now();
-        window.speechSynthesis.speak(utterance);
         setStatus('playing');
         trackProgress();
-    }, [supported, status, cleanText, getVoice, trackProgress]);
+        speakChunk(0);
+    }, [supported, status, cleanText, trackProgress, speakChunk]);
 
     const pause = useCallback(() => {
         if (!supported) return;

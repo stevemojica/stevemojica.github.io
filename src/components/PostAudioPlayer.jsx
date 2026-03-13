@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 
 function stripMarkdown(text) {
     return text
@@ -32,7 +32,7 @@ function useSpeechSynthesis(text) {
 
     const supported = typeof window !== 'undefined' && !!window.speechSynthesis;
 
-    const cleanText = stripMarkdown(text || '');
+    const cleanText = useMemo(() => stripMarkdown(text || ''), [text]);
 
     const getVoice = useCallback(() => {
         if (!supported) return null;
@@ -43,11 +43,12 @@ function useSpeechSynthesis(text) {
     }, [supported]);
 
     const trackProgress = useCallback(() => {
+        clearInterval(intervalRef.current);
         intervalRef.current = setInterval(() => {
             if (startTimeRef.current && estimatedDurationRef.current > 0) {
                 const elapsed = (Date.now() - startTimeRef.current) / 1000;
-                const pct = Math.min(100, (elapsed / estimatedDurationRef.current) * 100);
-                setProgress(Math.round(pct));
+                const next = Math.min(100, Math.round((elapsed / estimatedDurationRef.current) * 100));
+                setProgress(prev => prev === next ? prev : next);
             }
         }, 500);
     }, []);
@@ -83,19 +84,14 @@ function useSpeechSynthesis(text) {
         const wordCount = cleanText.split(/\s+/).length;
         estimatedDurationRef.current = (wordCount / 150) * 60;
 
-        utterance.onend = () => {
+        const resetPlayback = (finalProgress) => {
             clearInterval(intervalRef.current);
             setStatus('idle');
-            setProgress(100);
+            setProgress(finalProgress);
             startTimeRef.current = null;
         };
-
-        utterance.onerror = () => {
-            clearInterval(intervalRef.current);
-            setStatus('idle');
-            setProgress(0);
-            startTimeRef.current = null;
-        };
+        utterance.onend = () => resetPlayback(100);
+        utterance.onerror = () => resetPlayback(0);
 
         startTimeRef.current = Date.now();
         window.speechSynthesis.speak(utterance);

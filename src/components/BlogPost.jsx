@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 import ThemeToggle from './ThemeToggle';
+import PostAudioPlayer from './PostAudioPlayer';
 
 // Custom lightweight YAML frontmatter parser
 function parseFrontmatter(markdown) {
@@ -103,6 +104,7 @@ function BlogPost() {
                 <ThemeToggle />
             </nav>
             <article className="blog-post-container">
+                <PostAudioPlayer text={content} />
                 <ReactMarkdown className="markdown-body">
                     {String(content)}
                 </ReactMarkdown>

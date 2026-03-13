@@ -12,6 +12,8 @@ function createMockSpeechSynthesis() {
         getVoices: vi.fn(() => [
             { name: 'English Voice', lang: 'en-US' }
         ]),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
     }
 }
 

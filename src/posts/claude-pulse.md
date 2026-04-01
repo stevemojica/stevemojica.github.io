@@ -2,81 +2,110 @@
 slug: 'claude-pulse'
 category: 'ai'
 label: 'AI'
-date: 'March 2026'
-readTime: '4 min read'
-title: 'I Built Claude Pulse — A Native macOS Menubar App for Claude Usage Monitoring'
-excerpt: 'Every Claude usage tool lives in the terminal. I built the first native macOS menubar app that lets you glance at your limits from anywhere on your Mac.'
+date: 'April 2026'
+readTime: '5 min read'
+title: 'I Built Claude Pulse — A Native macOS Agent Hub for Vibe Coders'
+excerpt: 'When you have 5+ AI agents running at once, you need a command center. Claude Pulse is the native macOS floating dashboard that tracks every session, surfaces permission prompts, and monitors your usage — all without leaving your editor.'
 ---
 
-# I Built Claude Pulse — A Native macOS Menubar App for Claude Usage Monitoring
+# I Built Claude Pulse — A Native macOS Agent Hub for Vibe Coders
 
-If you use Claude Code heavily, you know the feeling. You're deep in a session, shipping features, and then — rate limited. No warning, no countdown, just a wall. You check your usage in Settings, do the mental math on when it resets, and wait.
+If you vibe code with Claude, you know the chaos. Five terminal tabs. Three agents deep in different features. One waiting for permission you forgot about. Another silently rate-limited twenty minutes ago. And you're alt-tabbing between all of them trying to figure out which session needs you right now.
 
-I got tired of that workflow. So I built **Claude Pulse**.
+I built **Claude Pulse** because I was tired of losing track of my own agents.
 
-## The Problem
+## The Problem Nobody Talks About
 
-Every existing Claude usage tool — ClaudeCodeStatusLine, ccusage, CCometixLine — lives inside the terminal. They're great projects, but they all share the same limitation: you have to be looking at your terminal to see your usage. The moment you switch to a browser, Figma, or Slack, you're flying blind.
+The Claude Code community has shipped some great usage monitoring tools — terminal statuslines, cost trackers, sparkline widgets. They're all solid. But they all share the same blind spot: they live *inside* a single terminal session. The moment you switch to your editor, browser, or Figma, you're flying blind.
 
-There's no native macOS experience for monitoring Claude usage. No widget. No menubar icon. Nothing you can glance at from anywhere on your Mac.
+And here's what changed everything: **multi-agent workflows**. Once you're running 3, 5, even 10 agent conversations in parallel, terminal-based monitoring completely falls apart. You can't watch 10 terminals at once. You need something that watches them *for* you.
 
-## The Solution
+## What Claude Pulse Actually Is
 
-Claude Pulse is a native macOS menubar app built in Swift and SwiftUI. It sits in your menubar as a tiny percentage indicator and, when clicked, opens a frosted glass dashboard showing all your usage windows in real time.
+Claude Pulse is a native macOS floating command bar — think Spotlight meets mission control for your AI agents. It lives as a thin strip at the top of your screen and auto-expands when an agent needs your attention. Toggle it with **Cmd+Shift+P** from anywhere.
 
-### What It Shows
+It has three states:
 
-- **5-Hour session** — your current session utilization with a live countdown when you're near the limit
-- **7-Day weekly** — aggregate usage across all models
-- **Per-model breakdown** — separate bars for Sonnet and Opus
-- **Extra credits** — your monthly overage spend in real dollars
-- **Sparkline trend** — a 24-hour usage graph so you can see your burn pattern
+- **Strip** (28px) — a subtle bar showing active agent count and usage at a glance
+- **Preview** (80px) — auto-pops when an agent needs permission or has a question, then auto-collapses after 5 seconds
+- **Dashboard** (full) — every session, every usage bar, every prediction, all in one view
 
-### What Makes It Smart
+### Agent Session Tracking
 
-Claude Pulse doesn't just show you numbers. It thinks about them.
+This is the headline feature. Claude Pulse detects every Claude Code session running on your machine — via a real-time Unix socket when hooks are configured, or by watching log files as a fallback.
 
-**Burn Rate Prediction** — Linear regression on your recent usage snapshots estimates when you'll hit a limit. If you're burning through your 5-hour window fast, the app shows "~47m until limit" right below the progress bar.
+For each session you see:
+- **Status** — working, idle, awaiting permission, completed, or errored
+- **Working directory** — instantly know which project each agent is in
+- **Current task** — what tool it's running right now
+- **Terminal jump** — click a session card to activate the right terminal window
 
-**Pace Coach** — Context-aware tips that only appear when they're actually useful. If your weekly usage is at 70% with 3 days left and you're on pace to exceed 100%, it'll suggest spreading usage out. If your Opus usage is 3x your Sonnet usage, it'll note that Sonnet handles many tasks well. No fear-mongering — just information.
+### Permission Relay
 
-**Live Countdown Clock** — When you're at 80%+ on any window, a ticking HH:MM:SS countdown appears showing exactly when the reset happens. No more mental math.
+This one's a game-changer. When an agent hits a permission prompt, Claude Pulse surfaces it in the floating bar with **Allow** and **Deny** buttons. No more hunting through terminal tabs to find which session is blocked. The command bar pops up, you approve, and you're back in your editor in two seconds.
 
-**Budget Alerts** — Native macOS notifications at configurable thresholds (50%, 75%, 90%, 95%). The 90%+ alerts use Time Sensitive interruption level so they break through Focus mode.
+### Usage Intelligence
 
-## How It Works
+The usage monitoring goes way beyond a progress bar:
 
-The data source is straightforward. Claude Code stores your OAuth token in the macOS Keychain. Claude Pulse reads it (read-only) and polls Anthropic's OAuth usage endpoint every 60 seconds. No API keys to configure — if Claude Code is logged in, Claude Pulse just works.
+- **All five windows** — 5-hour session, 7-day aggregate, Sonnet, Opus, and extra credits
+- **Burn rate prediction** — linear regression estimates when you'll hit limits
+- **Agent-aware Pace Coach** — "3 agents running, at this burn rate you'll hit your 5h limit in 22 minutes"
+- **Live countdown** — a ticking HH:MM:SS clock when you're near a reset
+- **Budget alerts** — native macOS notifications at configurable thresholds that break through Focus mode
+- **Sparkline trends** — 24-hour usage patterns and 7-day history charts
+
+## How It Works Under the Hood
+
+The architecture has three data sources feeding into one UI:
 
 ```
-macOS Keychain → OAuth token → Usage API → Menubar dashboard
+Floating Command Bar
+        |
+   +---------+---------+
+   |         |         |
+Socket    Log       Usage API
+Server    Watcher   (OAuth)
+   |         |         |
+Claude    ~/.claude/  api.anthropic.com
+Code      projects/
+Hooks     *.jsonl
 ```
 
-Usage snapshots are stored in a local SQLite database (with WAL mode for thread safety) for trend analysis and predictions. The database auto-prunes to 30 days.
+**Socket Server** — A Unix domain socket at `~/Library/Application Support/ClaudePulse/pulse.sock` receives real-time JSON events from Claude Code hooks. This is the primary path — bidirectional communication that enables permission relay.
 
-## The Technical Stack
+**Log Watcher** — Monitors `~/.claude/projects/` for JSONL changes as a fallback. Read-only, but still detects sessions and their activity.
 
-- **Swift + SwiftUI** — native macOS, no Electron
-- **MenuBarExtra** — macOS 14+ menubar API with window-style popover
-- **Swift Charts** — for the 7-day history view
-- **SQLite3** — usage history with WAL mode and NSLock-based thread safety
-- **Swift Actors** — cache and alert state are actor-isolated for concurrency safety
-- **CryptoKit** — SHA256 for CLAUDE_CONFIG_DIR hash suffix handling
+**Usage API** — Reads your OAuth token from macOS Keychain (the same one Claude Code stores) and polls Anthropic's usage endpoint. No API keys to configure — if Claude Code is logged in, Pulse just works.
 
-The whole thing is about 3,500 lines of Swift across a clean library/app separation. The core data layer is a reusable Swift package that the CLI tool also links against.
+All session data is ephemeral (in-memory only). Usage history is stored locally in SQLite with WAL mode and auto-prunes to 30 days.
+
+## The Tech Stack
+
+- **Swift + SwiftUI** — fully native macOS, no Electron, no web views
+- **NSPanel** — non-activating floating window that never steals focus from your editor
+- **POSIX sockets + DispatchSource** — raw Unix socket server with zero external dependencies
+- **SQLite3 + WAL** — usage history with concurrent access safety
+- **Sparkle** — auto-updates via signed GitHub Releases
+- **Programmatic audio** — AVAudioEngine-synthesized sound effects, no shipped audio files
+
+About 3,500 lines of Swift across a clean library/app/CLI separation. The core data layer is a reusable Swift package.
 
 ## Security
 
-This was important to get right since the app handles OAuth tokens:
+This matters because the app handles OAuth tokens and inter-process communication:
 
-- Tokens are read from Keychain at runtime, never stored or logged
-- Token expiry is checked before use, with automatic re-resolution on expiry
-- SQLite uses WAL mode with locking for concurrent access safety
-- The code review caught and fixed a dangling pointer in SQLite text binding, a data race in the alert system, and token prefix leaking to stdout
+- **Tokens read from Keychain at runtime**, never stored or logged
+- **Socket hardened** — 0600 permissions, peer UID validation via `getpeereid()`
+- **Input validated** — strict JSON schema, 64KB max message size, shell metacharacter rejection
+- **AppleScript sanitized** — TTY paths validated before interpolation
+- **Auto-updates signed** — Sparkle Ed25519 signature verification
 
-## Open Source
+Full threat model documented in [SECURITY.md](https://github.com/stevemojica/claude-pulse/blob/main/SECURITY.md).
 
-Claude Pulse is open source under the MIT license. You can build it right now:
+## Open Source and Free
+
+Claude Pulse is MIT licensed. Clone it and build in under a minute:
 
 ```bash
 git clone https://github.com/stevemojica/claude-pulse.git
@@ -84,14 +113,20 @@ cd claude-pulse
 swift build -c release
 ```
 
-GitHub Actions are set up for CI builds on every push and automated DMG releases when you tag a version.
+The hook installer configures Claude Code automatically:
+
+```bash
+./Scripts/install-hooks.sh
+```
 
 **Check it out:** [github.com/stevemojica/claude-pulse](https://github.com/stevemojica/claude-pulse)
 
 ## What's Next
 
-- **WidgetKit extension** — a Notification Center widget so you don't even need to click
-- **Sparkle auto-updates** — so the app keeps itself current
-- **Cross-session aggregation** — pull cost data from all your Claude Code sessions for a unified daily/weekly view
+- **WidgetKit extension** — Notification Center widget for at-a-glance usage
+- **More agent hooks** — Codex, Gemini CLI, and Cursor support
+- **tmux/screen support** — jump to specific tmux panes
+- **Configurable hotkey** — pick your own shortcut
+- **CSV export** — usage history for your own analysis
 
-If you're a Claude power user burning through limits, give it a try. And if you want to contribute — PRs are welcome.
+If you're running multiple Claude Code sessions and losing track of which one needs you, give Claude Pulse a try. And if you want to contribute — PRs are very welcome.

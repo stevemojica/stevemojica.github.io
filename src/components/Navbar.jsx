@@ -3,12 +3,9 @@ import { Link } from 'react-router-dom'
 import ThemeToggle from './ThemeToggle'
 
 const NAV_ITEMS = [
-  { label: 'About', href: '#about' },
-  { label: 'Projects', href: '#projects' },
-  { label: 'Plugins', href: '#plugins' },
-  { label: 'Skills', href: '#skills' },
-  { label: 'Thoughts', href: '#blog' },
-  { label: 'Journey', href: '#journey' },
+  { label: 'Now', href: '#now-snapshot' },
+  { label: 'Writing', href: '#blog' },
+  { label: 'Receipts', href: '#receipts' },
   { label: 'Tools', href: '/tools', isRoute: true },
   { label: 'Contact', href: '#contact' },
 ]
@@ -44,7 +41,7 @@ function Navbar() {
       <div className="nav-inner">
         <a href="#" className="nav-logo">
           <span className="nav-logo-icon">&lt;/&gt;</span>
-          portfolio
+          Steve Mojica
         </a>
 
         <ul className={`nav-links ${menuOpen ? 'open' : ''}`}>

@@ -3759,3 +3759,183 @@ body {
     padding: 0 20px;
   }
 }
+
+/* ---- Home writing / blog list ---- */
+.h-writing-feature {
+  display: block;
+  padding: 40px 44px;
+  border-radius: 20px;
+  background: var(--h-bg-2);
+  border: 1px solid var(--h-rule);
+  text-decoration: none;
+  color: inherit;
+  margin-bottom: 24px;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 0.3s, box-shadow 0.3s;
+}
+.h-writing-feature:hover {
+  transform: translateY(-3px);
+  border-color: var(--h-rule-2);
+  box-shadow: 0 20px 40px -22px rgba(0, 0, 0, 0.12);
+}
+.h-writing-feature__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--h-fg-3);
+  margin-bottom: 20px;
+}
+.h-writing-feature__tag {
+  color: var(--h-accent);
+}
+.h-writing-feature__title {
+  font-family: 'Fraunces', 'Times New Roman', serif;
+  font-size: clamp(26px, 3vw, 38px);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: 16px;
+  color: var(--h-fg);
+}
+.h-writing-feature__excerpt {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--h-fg-2);
+  max-width: 64ch;
+  margin-bottom: 20px;
+}
+.h-writing-feature__cta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--h-accent-ink);
+}
+[data-theme="dark"] .h-writing-feature__cta {
+  color: var(--h-accent);
+}
+
+.h-writing-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.h-writing-item {
+  list-style: none;
+}
+.h-writing-item__link {
+  display: block;
+  padding: 26px 28px;
+  background: var(--h-bg-2);
+  border: 1px solid var(--h-rule);
+  border-radius: 16px;
+  color: inherit;
+  text-decoration: none;
+  height: 100%;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 0.25s;
+}
+.h-writing-item__link:hover {
+  transform: translateY(-2px);
+  border-color: var(--h-rule-2);
+}
+.h-writing-item__meta {
+  display: flex;
+  gap: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--h-fg-3);
+  margin-bottom: 12px;
+}
+.h-writing-item__tag {
+  color: var(--h-accent);
+}
+.h-writing-item__title {
+  font-family: 'Fraunces', 'Times New Roman', serif;
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  color: var(--h-fg);
+  margin-bottom: 10px;
+}
+.h-writing-item__excerpt {
+  font-size: 14px;
+  color: var(--h-fg-2);
+  line-height: 1.55;
+  margin-bottom: 12px;
+  max-width: 50ch;
+}
+.h-writing-item__cta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--h-fg-3);
+}
+
+@media (max-width: 900px) {
+  .h-writing-feature { padding: 28px 24px; }
+  .h-writing-list { grid-template-columns: 1fr; }
+}
+
+/* ---- Nav restyle when sitting on top of the home design ---- */
+.h-home .nav {
+  background: color-mix(in oklab, var(--h-bg) 88%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--h-rule);
+  box-shadow: none;
+}
+.h-home .nav-logo {
+  color: var(--h-fg);
+  font-family: 'Fraunces', 'Times New Roman', serif;
+  font-weight: 600;
+  font-size: 15px;
+}
+.h-home .nav-logo-icon {
+  background: var(--h-accent);
+  color: var(--h-bg);
+  font-family: 'JetBrains Mono', monospace;
+}
+.h-home .nav-links a {
+  color: var(--h-fg-2);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.h-home .nav-links a:hover,
+.h-home .nav-links a.active {
+  color: var(--h-accent-ink);
+}
+[data-theme="dark"] .h-home .nav-links a:hover,
+[data-theme="dark"] .h-home .nav-links a.active {
+  color: var(--h-accent);
+}
+.h-home .nav-links a::after {
+  background: var(--h-accent);
+}
+.h-home .theme-toggle {
+  background: var(--h-bg-2);
+  border-color: var(--h-rule);
+  color: var(--h-fg-2);
+}
+.h-home .theme-toggle:hover {
+  border-color: var(--h-accent);
+  color: var(--h-accent);
+  box-shadow: none;
+}
+.h-home .mobile-menu-btn {
+  color: var(--h-fg-2);
+}
+/* Pad the hero below the 64px fixed nav */
+.h-home .h-hero {
+  padding-top: 120px;
+}

@@ -7,17 +7,12 @@ import Ticker from './components/Ticker'
 import NowSnapshot from './components/NowSnapshot'
 import MorningBriefing from './components/MorningBriefing'
 import HomeStats from './components/HomeStats'
+import HomeWriting from './components/HomeWriting'
 import CTABlock from './components/CTABlock'
-import About from './components/About'
-import Projects from './components/Projects'
-import Skills from './components/Skills'
-import Blog from './components/Blog'
-import Journey from './components/Journey'
 import BlogPost from './components/BlogPost'
 import SocialPostGenerator from './components/SocialPostGenerator'
 import Tools from './components/Tools'
 import ToolDetail from './components/ToolDetail'
-import ClaudePlugins from './components/ClaudePlugins'
 import CursorGlow from './components/CursorGlow'
 
 const ZendeskDashboard = lazy(() => import('./components/zendesk/ZendeskDashboard'))
@@ -33,12 +28,7 @@ function HomePage() {
       <NowSnapshot />
       <MorningBriefing />
       <HomeStats />
-      <Blog />
-      <Projects />
-      <ClaudePlugins />
-      <About />
-      <Journey />
-      <Skills />
+      <HomeWriting />
       <CTABlock />
     </div>
   )

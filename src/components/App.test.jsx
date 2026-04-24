@@ -19,8 +19,8 @@ describe('App', () => {
         </ThemeProvider>
       </MemoryRouter>
     )
-    expect(screen.getByText('Steven Mojica')).toBeInTheDocument()
-    expect(screen.getByText('IT Professional')).toBeInTheDocument()
+    expect(screen.getAllByText('K-12 IT Director').length).toBeGreaterThanOrEqual(1)
+    expect(screen.getByText(/small IT shops with good taste/i)).toBeInTheDocument()
     expect(screen.getByText("GitHub Portfolio")).toBeInTheDocument()
     expect(screen.getByText('Documenting the Journey')).toBeInTheDocument()
   })

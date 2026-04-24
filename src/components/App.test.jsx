@@ -11,7 +11,7 @@ vi.mock('../components/ContribGraph', () => ({
 }))
 
 describe('App', () => {
-  it('renders the profile page with key sections', () => {
+  it('renders the home page with the editorial design sections', () => {
     render(
       <MemoryRouter>
         <ThemeProvider>
@@ -21,8 +21,9 @@ describe('App', () => {
     )
     expect(screen.getAllByText('K-12 IT Director').length).toBeGreaterThanOrEqual(1)
     expect(screen.getByText(/small IT shops with good taste/i)).toBeInTheDocument()
-    expect(screen.getByText("GitHub Portfolio")).toBeInTheDocument()
-    expect(screen.getByText('Documenting the Journey')).toBeInTheDocument()
+    expect(screen.getByText(/where i'm at/i)).toBeInTheDocument()
+    expect(screen.getAllByText(/real news,/i).length).toBeGreaterThanOrEqual(1)
+    expect(screen.getByText(/real numbers/i)).toBeInTheDocument()
   })
 
   it('renders navigation links', () => {
@@ -35,7 +36,8 @@ describe('App', () => {
     )
     const nav = screen.getByRole('navigation')
     expect(nav).toBeInTheDocument()
-    expect(screen.getByText('About')).toBeInTheDocument()
-    expect(screen.getAllByText('Open Source').length).toBeGreaterThanOrEqual(1)
+    expect(screen.getByText('Now')).toBeInTheDocument()
+    expect(screen.getByText('Writing')).toBeInTheDocument()
+    expect(screen.getByText('Contact')).toBeInTheDocument()
   })
 })

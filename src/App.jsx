@@ -2,13 +2,17 @@ import { lazy, Suspense } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import './styles.css'
 import Navbar from './components/Navbar'
-import Hero from './components/Hero'
+import HomeHero from './components/HomeHero'
+import Ticker from './components/Ticker'
+import NowSnapshot from './components/NowSnapshot'
+import MorningBriefing from './components/MorningBriefing'
+import HomeStats from './components/HomeStats'
+import CTABlock from './components/CTABlock'
 import About from './components/About'
 import Projects from './components/Projects'
 import Skills from './components/Skills'
 import Blog from './components/Blog'
 import Journey from './components/Journey'
-import Contact from './components/Contact'
 import BlogPost from './components/BlogPost'
 import SocialPostGenerator from './components/SocialPostGenerator'
 import Tools from './components/Tools'
@@ -20,26 +24,23 @@ const ZendeskDashboard = lazy(() => import('./components/zendesk/ZendeskDashboar
 
 function HomePage() {
   return (
-    <>
+    <div className="h-home">
       <CursorGlow />
       <a className="skip-to-content" href="#blog">Skip to content</a>
       <Navbar />
-      <Hero />
-      <div className="divider" />
+      <HomeHero />
+      <Ticker />
+      <NowSnapshot />
+      <MorningBriefing />
+      <HomeStats />
       <Blog />
-      <div className="divider" />
       <Projects />
-      <div className="divider" />
       <ClaudePlugins />
-      <div className="divider" />
       <About />
-      <div className="divider" />
       <Journey />
-      <div className="divider" />
       <Skills />
-      <div className="divider" />
-      <Contact />
-    </>
+      <CTABlock />
+    </div>
   )
 }
 

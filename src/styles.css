@@ -3136,7 +3136,9 @@ body {
    Scoped under .h-* classes to avoid conflicts
    ============================================ */
 
-.h-home {
+.h-home,
+.h-about,
+.h-post {
   --h-bg: #f7f6f1;
   --h-bg-2: #ffffff;
   --h-bg-3: #efece4;
@@ -3154,7 +3156,9 @@ body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
-[data-theme="dark"] .h-home {
+[data-theme="dark"] .h-home,
+[data-theme="dark"] .h-about,
+[data-theme="dark"] .h-post {
   --h-bg: #0c0d0f;
   --h-bg-2: #141518;
   --h-bg-3: #1c1e22;
@@ -3499,9 +3503,11 @@ body {
 }
 
 /* ---- Morning Briefing block ---- */
+/* Fixed dark feature blocks — stay dark in both themes so the white text
+   stamped on them stays readable. */
 .h-mojoops {
-  background: var(--h-fg);
-  color: var(--h-bg);
+  background: #0a0c0f;
+  color: #f7f6f1;
   border-radius: 24px;
   padding: 56px;
   display: grid;
@@ -3613,8 +3619,8 @@ body {
 
 /* ---- CTA block + footer ---- */
 .h-cta {
-  background: var(--h-fg);
-  color: var(--h-bg);
+  background: #0a0c0f;
+  color: #f7f6f1;
   border-radius: 24px;
   padding: 56px;
   display: grid;
@@ -3652,7 +3658,7 @@ body {
   padding: 12px 16px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 10px;
-  color: var(--h-bg);
+  color: #f7f6f1;
   text-decoration: none;
   font-family: 'JetBrains Mono', monospace;
   font-size: 13px;
@@ -3660,7 +3666,7 @@ body {
 }
 .h-cta__opt:hover {
   background: var(--h-accent);
-  color: var(--h-fg);
+  color: #0a0c0f;
   border-color: var(--h-accent);
 }
 .h-cta__side {
@@ -3676,7 +3682,7 @@ body {
   border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
 }
 .h-cta__row b {
-  color: var(--h-bg);
+  color: #f7f6f1;
   font-weight: 500;
 }
 .h-cta__row--last {
@@ -4542,8 +4548,8 @@ body {
   margin: 0 auto;
 }
 .h-about-cta__block {
-  background: var(--h-fg);
-  color: var(--h-bg);
+  background: #0a0c0f;
+  color: #f7f6f1;
   border-radius: 20px;
   padding: 40px 44px;
   display: grid;
@@ -4578,7 +4584,7 @@ body {
   padding: 12px 20px;
   border-radius: 100px;
   background: var(--h-accent);
-  color: var(--h-fg);
+  color: #0a0c0f;
   font-family: 'JetBrains Mono', monospace;
   font-size: 13px;
   text-decoration: none;
@@ -4600,7 +4606,7 @@ body {
   border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
 }
 .h-about-cta__row b {
-  color: var(--h-bg);
+  color: #f7f6f1;
   font-weight: 500;
 }
 .h-about-cta__row--last {

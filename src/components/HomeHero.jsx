@@ -28,7 +28,7 @@ function HomeHero() {
               >
                 Watch Morning Briefing <span className="h-arr">↗</span>
               </a>
-              <a href="#about" className="h-btn h-btn--ghost">
+              <a href="/about" className="h-btn h-btn--ghost">
                 More about me →
               </a>
             </div>

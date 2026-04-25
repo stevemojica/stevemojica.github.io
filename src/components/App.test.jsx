@@ -34,10 +34,10 @@ describe('App', () => {
         </ThemeProvider>
       </MemoryRouter>
     )
-    const nav = screen.getByRole('navigation')
-    expect(nav).toBeInTheDocument()
-    expect(screen.getByText('Now')).toBeInTheDocument()
-    expect(screen.getByText('Writing')).toBeInTheDocument()
-    expect(screen.getByText('Contact')).toBeInTheDocument()
+    // Side rail exposes Home / Now / About plus external links
+    expect(screen.getAllByText('Home').length).toBeGreaterThanOrEqual(1)
+    expect(screen.getAllByText('Now').length).toBeGreaterThanOrEqual(1)
+    expect(screen.getAllByText('About').length).toBeGreaterThanOrEqual(1)
+    expect(screen.getAllByText('GitHub').length).toBeGreaterThanOrEqual(1)
   })
 })
